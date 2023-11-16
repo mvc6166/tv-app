@@ -2,14 +2,14 @@
 import { LitElement, html, css } from 'lit';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
-import "./tv-channel.js";
+import "./lecture-slide.js";
 
 export class TvApp extends LitElement {
   // defaults
   constructor() {
     super();
     this.name = '';
-    this.source = new URL('../assets/channels.json', import.meta.url).href;
+    this.source = new URL('../assets/slides.json', import.meta.url).href;
     this.listings = [];
   }
   // convention I enjoy using to define the tag's name
