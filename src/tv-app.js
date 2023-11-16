@@ -33,6 +33,21 @@ export class TvApp extends LitElement {
         margin: 16px;
         padding: 16px;
       }
+
+      .bigcols {
+        display: grid;
+        grid-template-columns: 2.5fr 1fr;
+        grid-template-rows: 1fr;
+        grid-column-gap: 32px;
+        grid-row-gap: 0px;
+        background-color: blue;
+      }
+
+      .lecture-slide-list { /* infinite rows */
+        display: flex;
+        flex-direction: column;
+        background-color: yellow;
+      }
       `
     ];
   }
@@ -40,23 +55,34 @@ export class TvApp extends LitElement {
   render() {
     return html`
       <h2>${this.name}</h2>
-      ${
-        this.listings.map(
-          (item) => html`
-            <tv-channel 
-              title="${item.title}"
-              presenter="${item.metadata.author}"
-              @click="${this.itemClick}"
-            >
-            </tv-channel>
-          `
-        )
-      }
+
+      <div class="bigcols">
+        <div class="lecture-screen">
+          screen
+        </div>
+    
+        <div class="lecture-slide-list">
+          ${
+            this.listings.map(
+              (item) => html`
+                <tv-channel 
+                  title="${item.title}"
+                  presenter="${item.metadata.author}"
+                  @click="${this.itemClick}"
+                >
+                </tv-channel>
+              `
+            )
+          }
+        </div>
+      </div>
+
+      
       <div>
         <!-- video -->
         <!-- discord / chat - optional -->
       </div>
-      <!-- dialog -->
+      <!-- dialog SHOWS WHEN CLICK -->
       <sl-dialog label="Dialog" class="dialog">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         <sl-button slot="footer" variant="primary" @click="${this.closeDialog}">Close</sl-button>
