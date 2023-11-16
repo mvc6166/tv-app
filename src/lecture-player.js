@@ -3,8 +3,9 @@ import { LitElement, html, css } from 'lit';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import "./lecture-slide.js";
+import '@lrnwebcomponents/video-player/video-player.js';
 
-export class TvApp extends LitElement {
+export class LecturePlayer extends LitElement {
   // defaults
   constructor() {
     super();
@@ -14,7 +15,7 @@ export class TvApp extends LitElement {
   }
   // convention I enjoy using to define the tag's name
   static get tag() {
-    return 'tv-app';
+    return 'lecture-player';
   }
   // LitElement convention so we update render() when values change
   static get properties() {
@@ -40,13 +41,25 @@ export class TvApp extends LitElement {
         grid-template-rows: 1fr;
         grid-column-gap: 32px;
         grid-row-gap: 0px;
-        background-color: blue;
       }
 
-      .lecture-slide-list { /* infinite rows */
+      .lecture-screen {
+        background-color: darkgray;
+        align-items: center;
+        padding: 8px;
+      }
+
+      .lecture-slide-list {
+
         display: flex;
-        flex-direction: column;
-        background-color: yellow;
+        flex-direction: column; /* infinite rows */
+        background-color: darkgray;
+        align-items: center;
+        padding: 16px;
+        gap: 16px;
+
+        overflow-y: scroll;
+        height: 90vh;
       }
       `
     ];
@@ -58,19 +71,19 @@ export class TvApp extends LitElement {
 
       <div class="bigcols">
         <div class="lecture-screen">
-          screen
+          <video-player source="https://www.youtube.com/watch?v=eC7xzavzEKY&t=1s&ab_channel=TheActualizationAgent"></video-player>
         </div>
     
         <div class="lecture-slide-list">
           ${
             this.listings.map(
               (item) => html`
-                <tv-channel 
+                <lecture-slide 
                   title="${item.title}"
                   presenter="${item.metadata.author}"
                   @click="${this.itemClick}"
                 >
-                </tv-channel>
+                </lecture-slide>
               `
             )
           }
@@ -122,4 +135,4 @@ export class TvApp extends LitElement {
   }
 }
 // tell the browser about our tag and class it should run when it sees it
-customElements.define(TvApp.tag, TvApp);
+customElements.define(LecturePlayer.tag, LecturePlayer);
