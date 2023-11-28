@@ -67,8 +67,6 @@ export class LecturePlayer extends LitElement {
   // LitElement rendering template of your element
   render() {
     return html`
-      <h2>${this.name}</h2>
-
       <div class="bigcols">
         <div class="lecture-screen">
           <video-player source="https://www.youtube.com/watch?v=eC7xzavzEKY"></video-player>
@@ -76,11 +74,12 @@ export class LecturePlayer extends LitElement {
     
         <div class="lecture-slide-list">
           ${
-            this.listings.map(
-              (item) => html`
+            this.listings.map( 
+              (item) => html` <!-- dialog SHOWS WHEN CLICK -->
                 <lecture-slide 
                   title="${item.title}"
                   presenter="${item.metadata.author}"
+                  timecode="${item.metadata.timecode}"
                   @click="${this.itemClick}"
                 >
                 </lecture-slide>
@@ -90,11 +89,6 @@ export class LecturePlayer extends LitElement {
         </div>
       </div>
 
-      
-      <div>
-        <!-- video -->
-        <!-- discord / chat - optional -->
-      </div>
       <!-- dialog SHOWS WHEN CLICK -->
       <sl-dialog label="Dialog" class="dialog">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -109,9 +103,11 @@ export class LecturePlayer extends LitElement {
   }
 
   itemClick(e) {
-    console.log(e.target);
-    const dialog = this.shadowRoot.querySelector('.dialog');
-    dialog.show();
+    this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').play();
+    this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').seek(e.target.timecode);
+    //console.log(e.target);
+    //const dialog = this.shadowRoot.querySelector('.dialog');
+    //dialog.show();
   }
 
   // LitElement life cycle for when any property changes
