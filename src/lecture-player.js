@@ -71,7 +71,7 @@ export class LecturePlayer extends LitElement {
 
       <div class="bigcols">
         <div class="lecture-screen">
-          <video-player source="https://www.youtube.com/watch?v=eC7xzavzEKY&t=1s&ab_channel=TheActualizationAgent"></video-player>
+          <video-player source="https://www.youtube.com/watch?v=eC7xzavzEKY"></video-player>
         </div>
     
         <div class="lecture-slide-list">
