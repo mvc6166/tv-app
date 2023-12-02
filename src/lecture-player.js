@@ -88,26 +88,12 @@ export class LecturePlayer extends LitElement {
           }
         </div>
       </div>
-
-      <!-- dialog SHOWS WHEN CLICK -->
-      <sl-dialog label="Dialog" class="dialog">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        <sl-button slot="footer" variant="primary" @click="${this.closeDialog}">Close</sl-button>
-      </sl-dialog>
     `;
-  }
-
-  closeDialog(e) {
-    const dialog = this.shadowRoot.querySelector('.dialog');
-    dialog.hide();
   }
 
   itemClick(e) {
     this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').play();
     this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').seek(e.target.timecode);
-    //console.log(e.target);
-    //const dialog = this.shadowRoot.querySelector('.dialog');
-    //dialog.show();
   }
 
   // LitElement life cycle for when any property changes
