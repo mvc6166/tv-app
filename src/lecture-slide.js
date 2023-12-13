@@ -6,7 +6,7 @@ export class LectureSlide extends LitElement {
   constructor() {
     super();
     this.title = '';
-    this.presenter = '';
+    this.description = '';
     this.timecode = 0;
   }
   // convention I enjoy using to define the tag's name
@@ -17,7 +17,7 @@ export class LectureSlide extends LitElement {
   static get properties() {
     return {
       title: { type: String },
-      presenter: { type: String },
+      description: { type: String },
       timecode: { type: Number },
     };
   }
@@ -38,7 +38,7 @@ export class LectureSlide extends LitElement {
     return html`
       <div class="wrapper">
         <h3>${this.title}</h3>
-        <h4>${this.presenter}</h4>
+        <!--<h4>${this.description}</h4>-->
         <slot></slot>
       </div>  
       `;

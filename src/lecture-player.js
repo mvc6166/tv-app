@@ -43,6 +43,34 @@ export class LecturePlayer extends LitElement {
         grid-row-gap: 0px;
       }
 
+      .button-holder {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: 1fr;
+        grid-column-gap: 0px;
+        grid-row-gap: 0px;
+      }
+
+      .button-previous {
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 8px;
+      }
+
+      .button-next {
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 8px;
+      }
+
+      .description-holder {
+        display: flex;
+        align-items: center;
+        height: 10vh
+      }
+
       .lecture-screen {
         background-color: darkgray;
         align-items: center;
@@ -50,7 +78,6 @@ export class LecturePlayer extends LitElement {
       }
 
       .lecture-slide-list {
-
         display: flex;
         flex-direction: column; /* infinite rows */
         background-color: darkgray;
@@ -68,17 +95,28 @@ export class LecturePlayer extends LitElement {
   render() {
     return html`
       <div class="bigcols">
-        <div class="lecture-screen">
-          <video-player source="https://www.youtube.com/watch?v=eC7xzavzEKY"></video-player>
+
+        <div class="leftside">
+          <div class="lecture-screen">
+            <video-player source="https://www.youtube.com/watch?v=eC7xzavzEKY"></video-player>
+          </div>
+
+          <div class="description-holder">${this.updatingDescription()}</div>
+          
+          <div class="button-holder">
+              <div class="button-previous" @click="${this.prevSlide}">Previous Slide</div>
+              <div></div>
+              <div class="button-next" @click="${this.nextSlide}">Next Slide</div>
+          </div>
         </div>
-    
+
         <div class="lecture-slide-list">
           ${
             this.listings.map( 
               (item) => html` <!-- dialog SHOWS WHEN CLICK -->
                 <lecture-slide 
                   title="${item.title}"
-                  presenter="${item.metadata.author}"
+                  description="${item.description}"
                   timecode="${item.metadata.timecode}"
                   @click="${this.itemClick}"
                 >
@@ -87,6 +125,7 @@ export class LecturePlayer extends LitElement {
             )
           }
         </div>
+
       </div>
     `;
   }
@@ -94,6 +133,40 @@ export class LecturePlayer extends LitElement {
   itemClick(e) {
     this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').play();
     this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').seek(e.target.timecode);
+  }
+
+  nextSlide() {
+    const currentVidTime = this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').media.currentTime;
+    
+    const nextTime = this.listings.find((item) => currentVidTime < item.metadata.timecode);
+    
+    this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').play();
+    this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').seek(nextTime.metadata.timecode);
+  }
+
+  prevSlide() {
+    const currentVidTime = this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').media.currentTime;
+    
+    const currentSlideStart = this.listings.findLast((item) => item.metadata.timecode < currentVidTime);
+    const prevSlideStart = this.listings.findLast((item) => item.metadata.timecode < currentSlideStart.metadata.timecode);
+
+    this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').play();
+    this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').seek(prevSlideStart.metadata.timecode);
+  }
+
+  updatingDescription() {
+    setInterval(this.getDescription, 2000);
+  }
+
+  getDescription() { //NEED TO REPEAT EVERY 3 SECONDS, CHECKING CURRENT TIMESTAMP AND IF IT PASSES A BOUNDARY THEN UPDATING THE DESCRIPTION BOX
+    const currentVidTime = this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').media.currentTime;
+    const currentSlideStart = this.listings.findLast((item) => item.metadata.timecode < currentVidTime);
+    
+    console.log(currentSlideStart.description);
+    
+    this.shadowRoot.querySelector('description-holder') = currentSlideStart.description;
+    
+    return currentSlideStart.description;
   }
 
   // LitElement life cycle for when any property changes
