@@ -12,6 +12,7 @@ export class LecturePlayer extends LitElement {
     this.name = '';
     this.source = new URL('../assets/slides.json', import.meta.url).href;
     this.listings = [];
+    this.slideDescription = '';
   }
   // convention I enjoy using to define the tag's name
   static get tag() {
@@ -23,6 +24,7 @@ export class LecturePlayer extends LitElement {
       name: { type: String },
       source: { type: String },
       listings: { type: Array },
+      slideDescription: { type: String },
     };
   }
   // LitElement convention for applying styles JUST to our element
@@ -67,6 +69,7 @@ export class LecturePlayer extends LitElement {
 
       .description-holder {
         display: flex;
+        background-color: lightgray;
         align-items: center;
         height: 10vh
       }
@@ -101,7 +104,7 @@ export class LecturePlayer extends LitElement {
             <video-player source="https://www.youtube.com/watch?v=eC7xzavzEKY"></video-player>
           </div>
 
-          <div class="description-holder">${this.updatingDescription()}</div>
+          <div class="description-holder" desc="${this.updatingDescription}" @click="${this.getDescription}">${this.slideDescription}</div>
           
           <div class="button-holder">
               <div class="button-previous" @click="${this.prevSlide}">Previous Slide</div>
@@ -154,19 +157,19 @@ export class LecturePlayer extends LitElement {
     this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').seek(prevSlideStart.metadata.timecode);
   }
 
-  updatingDescription() {
+  updatingDescription() { //procs every 2 seconds
     setInterval(this.getDescription, 2000);
   }
 
-  getDescription() { //NEED TO REPEAT EVERY 3 SECONDS, CHECKING CURRENT TIMESTAMP AND IF IT PASSES A BOUNDARY THEN UPDATING THE DESCRIPTION BOX
-    const currentVidTime = this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').media.currentTime;
-    const currentSlideStart = this.listings.findLast((item) => item.metadata.timecode < currentVidTime);
-    
-    console.log(currentSlideStart.description);
-    
-    this.shadowRoot.querySelector('description-holder') = currentSlideStart.description;
-    
-    return currentSlideStart.description;
+  getDescription() { //CHECKING CURRENT TIMESTAMP AND IF IT PASSES A BOUNDARY THEN UPDATING THE DESCRIPTION BOX
+      const currentVidTime = this.shadowRoot.querySelector('video-player').shadowRoot.querySelector('a11y-media-player').media.currentTime;
+      const currentSlideStart = this.listings.findLast((item) => item.metadata.timecode < currentVidTime);
+      
+      console.log(currentSlideStart.description); //for testing
+      
+      //this.querySelector('description-holder').words = currentSlideStart.description;
+
+      this.slideDescription = currentSlideStart.description; //this works for clicking to get description
   }
 
   // LitElement life cycle for when any property changes
